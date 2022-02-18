@@ -60,8 +60,8 @@ def in_system(save_path, filename_alpha, filename_recoil, distribution_file, set
     g.close()
     h.close()
 
-    efficiency_alpha = 100 * N_alpha * branching/float(N_tot)
-    efficiency_recoil = 100 * N_recoil * branching/float(N_tot)
+    efficiency_alpha = 10**(-3) * N_alpha * branching/float(N_tot)
+    efficiency_recoil = 10**(-3) * N_recoil * branching/float(N_tot)
     
     return [efficiency_alpha, efficiency_recoil]
         
