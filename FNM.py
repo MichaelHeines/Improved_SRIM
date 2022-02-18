@@ -30,7 +30,6 @@ def in_system(save_path, filename_alpha, filename_recoil, distribution_file, set
     N_alpha = 0
     N_recoil = 0
     N_tot = 0
-    N_tot2 = 0
 
     h = open(completename_out, 'w')
 
