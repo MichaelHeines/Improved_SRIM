@@ -21,18 +21,22 @@ def in_system(save_path, filename_alpha, filename_recoil, distribution_file, set
     completename_recoil = os.path.join(save_path, filename_recoil)
     completename_out = os.path.join(save_path, distribution_file)
 
+    # Extract data from settings
     r_det = settings.r_det
     branching = settings.branching
     sample_thickness = settings.sample_thickness
     distance = settings.distance
     generate_new = settings.generate_new
 
+    # Initialize counters
     N_alpha = 0
     N_recoil = 0
     N_tot = 0
 
+    # Open output file
     h = open(completename_out, 'w')
-
+    
+    # Open and read alpha file
     with open(completename_alpha, 'r') as f:
         reader = csv.reader(f, delimiter = ' ')
         
@@ -40,8 +44,9 @@ def in_system(save_path, filename_alpha, filename_recoil, distribution_file, set
             N_tot += 1
             if float(row[1]) >= sample_thickness + distance:                                # Reaches the detector position
                 if float(row[2])**2 + float(row[3])**2 <= r_det**2:                         # Inside detection surface
+                    
                     N_alpha += 1
-
+    # Open and read the recoil file
     with open(completename_recoil, 'r') as g:
         reader = csv.reader(g, delimiter = ' ')
 
@@ -59,6 +64,7 @@ def in_system(save_path, filename_alpha, filename_recoil, distribution_file, set
     g.close()
     h.close()
 
+    # Calculate efficiencies: 10**-3 = 10**2 percent per unit / 10**5 particles
     efficiency_alpha = 10**(-3) * N_alpha * branching/float(N_tot)
     efficiency_recoil = 10**(-3) * N_recoil * branching/float(N_tot)
     
