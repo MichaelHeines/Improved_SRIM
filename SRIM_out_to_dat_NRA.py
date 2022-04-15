@@ -3,6 +3,7 @@ import math
 import numpy as np
 import os.path
 
+# Define the settings class
 class Settings:
     def __init__(self, alpha_energy, atomic_number_p1, atomic_number_p2, mass_fraction, sample_width, sample_thickness, first_step):
         self.alpha_energy = alpha_energy                        # Energy of alpha particle
@@ -13,7 +14,7 @@ class Settings:
         self.sample_thickness = sample_thickness                # Total thickness of the sample
         self.first_step = first_step                            # Is it the first decay occuring (in that case flip the sample)
 
-
+# Generates information lines
 def generate_toptext(string_alpha, string_recoil):
     line1 = "=========== TRIM with various Incident Ion Energies/Angles and Depths ========= \n"
     line2 = "= This file tabulates the kinetics of incident ions or atoms.                 = \n"
@@ -51,11 +52,14 @@ def srim_out_to_in(settings, save_path, file_name_in, file_name_out_p1, file_nam
     complete_name_out_p1 = os.path.join(save_path, file_name_out_p1)
     complete_name_out_p2 = os.path.join(save_path, file_name_out_p2)
     
+    # Open and read input file
     with open(complete_name_in, 'r') as f:
         reader = csv.reader(f, delimiter = ' ')
         
         for row in reader:
+            # Check if the particle is still on the sample
             if -sample_width/2 < float(row[2]) < sample_width/2 and -sample_width/2 < float(row[3]) < sample_width/2 and float(row[1]) < sample_thickness:
+                # Add position to output arrays
                 ion = row[0].lstrip("0")
                 while len(ion) < 5:
                     ion = "0" + ion
@@ -69,6 +73,7 @@ def srim_out_to_in(settings, save_path, file_name_in, file_name_out_p1, file_nam
                     x.append(abs(float(row[1])))
     
     N = len(ion_number)
+    # Generate isotropic distribution
     phi = np.random.uniform(0, 2 * math.pi, N)
     theta = np.arccos(1 - 2 * np.random.random(N))
     energy_p1 = [alpha_energy]*N
@@ -83,6 +88,7 @@ def srim_out_to_in(settings, save_path, file_name_in, file_name_out_p1, file_nam
     g.write(text[0])
     h.write(text[1])
     
+    # For all events still in the system write dat file entry
     for i in range(N):   
         line_p1 = ion_number[i] + "\t" + atomic_number_p1 + "\t" + str("{:e}".format(energy_p1[i])) + "\t" + str("{:e}".format(x[i])) + "\t" + str("{:e}".format(y[i])) + "\t" + str("{:e}".format(z[i])) + "\t" + str(vec_x[i]) + "\t" + str(vec_y[i]) + "\t" + str(vec_z[i]) + "\n"
         line_p2 = ion_number[i] + "\t" + atomic_number_p2 + "\t" + str("{:e}".format(energy_p1[i] * mass_fraction)) + "\t" + str("{:e}".format(x[i])) + "\t" + str("{:e}".format(y[i])) + "\t" + str("{:e}".format(z[i])) + "\t" + str(- vec_x[i]) + "\t" + str(- vec_y[i]) + "\t" + str(- vec_z[i]) + "\n"
