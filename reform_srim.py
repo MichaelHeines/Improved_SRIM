@@ -8,10 +8,10 @@ def reform_R(save_path, name_in, name_out):
     fin = open(complete_name_in, "r")
     fout = open(complete_name_out, "w")
 
-    start_data = False
+    start_data = False                                                                                  # Check if actual data has started
     for line in fin:
         if start_data:
-            fout.write(re.sub(',', '.', re.sub('\s+', ' ', re.sub('E', 'e', line))) + "\n")
+            fout.write(re.sub(',', '.', re.sub('\s+', ' ', re.sub('E', 'e', line))) + "\n")             # Change "," to "."; change multiple spaces to a single space; change E to e
         elif line.startswith("-------"):
             start_data = True
 
@@ -26,10 +26,10 @@ def reform_T(save_path, name_in, name_out):
     fin = open(complete_name_in, "r")
     fout = open(complete_name_out, "w")
 
-    start_data = False
+    start_data = False                                                                                  # Check if actual data has started
     for line in fin:
         if start_data:
-            fout.write(re.sub(',', '.', re.sub('\s+', ' ', re.sub('E', 'e', re.sub('T', 'T ' ,line)))) + "\n")
+            fout.write(re.sub(',', '.', re.sub('\s+', ' ', re.sub('E', 'e', re.sub('T', 'T ' ,line)))) + "\n")  # Change "," to "."; change multiple spaces to a single space; change E to e; T to T\s 
         elif line.startswith(" Numb"):
             start_data = True
 
